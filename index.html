@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Práctica Infilink 6.0 - Animaciones y Scripts</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:40px;
+    color:#222;
+    line-height:1.5;
+}
+h1{
+    text-align:center;
+    color:#003366;
+    border-bottom:4px solid #003366;
+    padding-bottom:10px;
+}
+h2{
+    color:#003366;
+    border-bottom:2px solid #d0d0d0;
+    padding-bottom:5px;
+}
+h3{
+    color:#004080;
+}
+.datos, .bloque{
+    border:1px solid #bbb;
+    padding:15px;
+    margin:20px 0;
+    background:#f9f9f9;
+}
+.imagen{
+    border:2px dashed #777;
+    padding:15px;
+    margin:18px 0;
+    text-align:center;
+    background:#fff;
+}
+.imagen img{
+    max-width:100%;
+    height:auto;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin:15px 0;
+}
+th,td{
+    border:1px solid #777;
+    padding:8px;
+}
+th{
+    background:#d9eaf7;
+}
+pre{
+    background:#eee;
+    padding:12px;
+    border-left:4px solid #003366;
+    white-space:pre-wrap;
+}
+.respuesta{
+    border:1px solid #999;
+    height:85px;
+    margin:10px 0 20px 0;
+}
+@media print{
+    body{margin:20px;}
+    .bloque{page-break-inside:avoid;}
+}
+</style>
+</head>
+
+<body>
+
+<h1>Práctica de Laboratorio: Infilink 6.0, Animaciones y Scripts</h1>
+
+<div class="datos">
+<p><strong>Nombre:</strong> ____________________________________________</p>
+<p><strong>Curso:</strong> ____________________</p>
+<p><strong>Fecha:</strong> ____________________</p>
+<p><strong>Docente:</strong> ____________________________________________</p>
+</div>
+
+<h2>1. Objetivo de la práctica</h2>
+
+<p>
+En esta práctica vas a construir una pantalla HMI en Infilink 6.0 para supervisar un proceso industrial simple. 
+Primero usarás animaciones nativas del software y luego aplicarás scripts básicos para entregar más información al operador.
+</p>
+
+<h2>2. Sistema de trabajo</h2>
+
+<p>
+Trabajarás con un PLC Delta serie DVP que ya tiene un programa base cargado. 
+El PLC entregará variables tipo BOOL y WORD que usarás desde Infilink para representar estados, valores, alarmas y mensajes.
+</p>
+
+<div class="imagen">
+<p><strong>Imagen 1:</strong> Esquema general del sistema PLC - HMI</p>
+<img src="1.PNG" alt="Esquema general PLC HMI">
+</div>
+
+<h2>3. Variables disponibles</h2>
+
+<table>
+<tr><th>Variable</th><th>Tipo</th><th>Descripción</th></tr>
+<tr><td>MOTOR_RUN</td><td>BOOL</td><td>Motor encendido o apagado</td></tr>
+<tr><td>SENSOR_INICIO</td><td>BOOL</td><td>Sensor de entrada</td></tr>
+<tr><td>SENSOR_FINAL</td><td>BOOL</td><td>Sensor de salida</td></tr>
+<tr><td>ALARMA</td><td>BOOL</td><td>Falla general del sistema</td></tr>
+<tr><td>START</td><td>BOOL</td><td>Orden de partida desde HMI</td></tr>
+<tr><td>STOP</td><td>BOOL</td><td>Orden de parada desde HMI</td></tr>
+<tr><td>RESET</td><td>BOOL</td><td>Reinicio de alarma o contador</td></tr>
+<tr><td>VELOCIDAD</td><td>WORD</td><td>Velocidad simulada entre 0 y 100</td></tr>
+<tr><td>NIVEL</td><td>WORD</td><td>Nivel simulado entre 0 y 100</td></tr>
+<tr><td>CONTADOR</td><td>WORD</td><td>Conteo de piezas</td></tr>
+</table>
+
+<h2>4. Actividad principal</h2>
+
+<p>
+Debes crear una pantalla HMI que represente una cinta transportadora con motor, sensores, contador, nivel de estanque y alarma.
+</p>
+
+<p>Tu pantalla debe incluir como mínimo:</p>
+
+<ul>
+<li>Motor o cinta transportadora.</li>
+<li>Sensor de inicio.</li>
+<li>Sensor de final.</li>
+<li>Botón START.</li>
+<li>Botón STOP.</li>
+<li>Botón RESET.</li>
+<li>Indicador de velocidad.</li>
+<li>Indicador de nivel.</li>
+<li>Contador de piezas.</li>
+<li>Mensaje o indicador de alarma.</li>
+</ul>
+
+<div class="imagen">
+<p><strong>Imagen 2:</strong> Diseño referencial de la pantalla HMI</p>
+<img src="2.PNG" alt="Diseño referencial pantalla HMI">
+</div>
+
+<h2>5. Parte I: Comunicación y Tags</h2>
+
+<div class="bloque">
+<h3>Paso 1: Crea el proyecto</h3>
+<p>
+Abre Infilink 6.0 y crea un nuevo proyecto. Define el nombre del proyecto y la pantalla principal.
+</p>
+
+<div class="imagen">
+<p><strong>Imagen 3:</strong> Creación del proyecto</p>
+<img src="3.PNG" alt="Creación del proyecto">
+</div>
+</div>
+
+<div class="bloque">
+<h3>Paso 2: Configura la comunicación con el PLC</h3>
+<p>
+Configura el canal de comunicación correspondiente al PLC Delta DVP. 
+Verifica que Infilink pueda leer las variables del PLC.
+</p>
+
+<div class="imagen">
+<p><strong>Imagen 4:</strong> Configuración de comunicación</p>
+<img src="4.PNG" alt="Comunicación con PLC">
+</div>
+</div>
+
+<div class="bloque">
+<h3>Paso 3: Crea los Tags</h3>
+<p>
+Crea los tags indicados en la tabla de variables. Respeta el nombre, tipo de dato y dirección asignada por el docente.
+</p>
+
+<div class="imagen">
+<p><strong>Imagen 5:</strong> Creación de tags</p>
+<img src="5.PNG" alt="Creación de tags">
+</div>
+</div>
+
+<h2>6. Parte II: Animaciones nativas</h2>
+
+<p>
+Antes de usar scripts, configura animaciones directamente desde las propiedades de los objetos gráficos.
+</p>
+
+<div class="bloque">
+<h3>Actividad 1: Indicador de motor</h3>
+<p>
+Crea un piloto luminoso o indicador gráfico asociado a la variable <strong>MOTOR_RUN</strong>.
+</p>
+
+<table>
+<tr><th>Valor</th><th>Estado esperado</th><th>Color sugerido</th></tr>
+<tr><td>0</td><td>Motor detenido</td><td>Gris</td></tr>
+<tr><td>1</td><td>Motor en marcha</td><td>Verde</td></tr>
+</table>
+</div>
+
+<div class="bloque">
+<h3>Actividad 2: Indicadores de sensores</h3>
+<p>
+Crea dos indicadores para <strong>SENSOR_INICIO</strong> y <strong>SENSOR_FINAL</strong>.
+Cuando el sensor esté activo, debe verse claramente en pantalla.
+</p>
+</div>
+
+<div class="bloque">
+<h3>Actividad 3: Barra de nivel</h3>
+<p>
+Crea una barra vertical asociada a la variable <strong>NIVEL</strong>. 
+Configura el rango de trabajo entre 0 y 100.
+</p>
+</div>
+
+<div class="bloque">
+<h3>Actividad 4: Displays numéricos</h3>
+<p>
+Agrega visualizadores numéricos para las variables <strong>VELOCIDAD</strong> y <strong>CONTADOR</strong>.
+</p>
+</div>
+
+<div class="bloque">
+<h3>Actividad 5: Visibilidad de alarma</h3>
+<p>
+Crea un texto que diga <strong>ALARMA ACTIVA</strong>. 
+Configura su visibilidad para que aparezca solo cuando la variable <strong>ALARMA</strong> esté activa.
+</p>
+</div>
+
+
+
+<h2>7. Parte III: Scripts básicos</h2>
+
+<p>
+Ahora usarás scripts para interpretar variables y generar mensajes útiles. 
+Los siguientes ejemplos muestran la lógica que debes implementar en Infilink.
+</p>
+
+<div class="bloque">
+<h3>Script 1: Mensaje según velocidad</h3>
+<p>
+Crea un mensaje que indique si el proceso está detenido, lento o en velocidad normal.
+</p>
+
+<pre>
+IF VELOCIDAD = 0 THEN
+    MensajeVelocidad = "DETENIDO"
+ELSEIF VELOCIDAD < 50 THEN
+    MensajeVelocidad = "VELOCIDAD BAJA"
+ELSE
+    MensajeVelocidad = "VELOCIDAD NORMAL"
+END IF
+</pre>
+</div>
+
+<div class="bloque">
+<h3>Script 2: Alarma por nivel alto</h3>
+<p>
+Genera una alarma cuando el nivel sea superior a 80.
+</p>
+
+<pre>
+IF NIVEL > 80 THEN
+    ALARMA = 1
+END IF
+</pre>
+</div>
+
+<div class="bloque">
+<h3>Script 3: Aviso de mantenimiento</h3>
+<p>
+Muestra un aviso cuando el contador supere las 1000 piezas.
+</p>
+
+<pre>
+IF CONTADOR > 1000 THEN
+    MensajeMantenimiento = "REALIZAR MANTENIMIENTO"
+END IF
+</pre>
+</div>
+
+<div class="bloque">
+<h3>Script 4: Estado textual de sensor</h3>
+<p>
+Muestra un texto según el estado del sensor de inicio.
+</p>
+
+<pre>
+IF SENSOR_INICIO = 1 THEN
+    MensajeSensor = "PIEZA DETECTADA"
+ELSE
+    MensajeSensor = "SIN PIEZA"
+END IF
+</pre>
+</div>
+
+
+
+<h2>8. Desafío final</h2>
+
+<p>
+Construye una pantalla final que integre comunicación, tags, animaciones nativas y scripts.
+</p>
+
+<table>
+<tr><th>Requisito</th><th>Cantidad mínima</th></tr>
+<tr><td>Tags BOOL utilizados</td><td>5</td></tr>
+<tr><td>Tags WORD utilizados</td><td>3</td></tr>
+<tr><td>Animaciones nativas</td><td>4</td></tr>
+<tr><td>Scripts implementados</td><td>2</td></tr>
+<tr><td>Alarmas visuales</td><td>1</td></tr>
+<tr><td>Botones de control</td><td>3</td></tr>
+</table>
+
+
+
+<h2>9. Preguntas de análisis</h2>
+
+<p><strong>1. ¿Qué ventajas tienen las animaciones nativas frente a los scripts?</strong></p>
+<div class="respuesta"></div>
+
+<p><strong>2. ¿Cuándo conviene usar scripts en lugar de animaciones nativas?</strong></p>
+<div class="respuesta"></div>
+
+<p><strong>3. ¿Qué riesgo existe al escribir variables desde la HMI hacia el PLC?</strong></p>
+<div class="respuesta"></div>
+
+<p><strong>4. ¿Qué información adicional puedes entregar al operador mediante scripts?</strong></p>
+<div class="respuesta"></div>
+
+<p><strong>5. ¿Qué parte fue más sencilla: animar objetos o programar scripts? Justifica.</strong></p>
+<div class="respuesta"></div>
+
+<h2>10. Autoevaluación</h2>
+
+<table>
+<tr><th>Criterio</th><th>Sí</th><th>Parcialmente</th><th>No</th></tr>
+<tr><td>Configuré la comunicación con el PLC.</td><td></td><td></td><td></td></tr>
+<tr><td>Creé los tags solicitados.</td><td></td><td></td><td></td></tr>
+<tr><td>Usé variables BOOL en la pantalla.</td><td></td><td></td><td></td></tr>
+<tr><td>Usé variables WORD en la pantalla.</td><td></td><td></td><td></td></tr>
+<tr><td>Configuré animaciones nativas.</td><td></td><td></td><td></td></tr>
+<tr><td>Implementé scripts básicos.</td><td></td><td></td><td></td></tr>
+<tr><td>La pantalla final es clara y ordenada.</td><td></td><td></td><td></td></tr>
+</table>
+
+<h2>11. Evaluación docente</h2>
+
+<table>
+<tr>
+<th>Criterio</th>
+<th>Logrado</th>
+<th>Medianamente logrado</th>
+<th>No logrado</th>
+</tr>
+<tr>
+<td>Comunicación PLC-HMI</td>
+<td>Lee y escribe variables correctamente.</td>
+<td>Presenta fallas menores.</td>
+<td>No establece comunicación.</td>
+</tr>
+<tr>
+<td>Creación de tags</td>
+<td>Todos los tags están correctamente configurados.</td>
+<td>Hay errores menores en algunos tags.</td>
+<td>Los tags no funcionan.</td>
+</tr>
+<tr>
+<td>Animaciones nativas</td>
+<td>Las animaciones representan claramente el proceso.</td>
+<td>Algunas animaciones funcionan parcialmente.</td>
+<td>No hay animaciones funcionales.</td>
+</tr>
+<tr>
+<td>Scripts</td>
+<td>Los scripts funcionan y aportan información útil.</td>
+<td>Los scripts son incompletos o poco claros.</td>
+<td>No implementa scripts.</td>
+</tr>
+<tr>
+<td>Pantalla final</td>
+<td>La pantalla es clara, ordenada y técnica.</td>
+<td>La pantalla es comprensible con desorden menor.</td>
+<td>La pantalla es confusa o incompleta.</td>
+</tr>
+<tr>
+<td>Análisis</td>
+<td>Responde con argumentos técnicos.</td>
+<td>Responde parcialmente.</td>
+<td>No responde o no justifica.</td>
+</tr>
+</table>
+
+<h2>12. Observaciones del docente</h2>
+
+<div class="respuesta" style="height:120px;"></div>
+
+<p><strong>Nota final:</strong> ___________________________</p>
+
+</body>
+</html>
